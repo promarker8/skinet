@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
+builder.Services.AddSwaggerDocumentaion();
 
 var app = builder.Build();
 
@@ -23,8 +24,7 @@ app.UseMiddleware<ExceptionMiddleware>();
 // (BuggyController) this middleware will pass the error code of 0 to the simple ErrorController.
 app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
-app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerDocumentation();
 
 app.UseStaticFiles();
 
