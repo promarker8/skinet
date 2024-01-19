@@ -18,7 +18,7 @@ export class ErrorInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     // have to use the pipe operator, in order to do something with an observale before we can pass it back to a component
     return next.handle(request).pipe(
-      // we want ot catch the error coming back from the API (use rxjs stuff)
+      // want to catch the error coming back from the API (use rxjs stuff)
       catchError((error: HttpErrorResponse) => {
         if (error) {
           if (error.status === 400) {
