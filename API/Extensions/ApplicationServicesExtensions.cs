@@ -31,9 +31,11 @@ namespace API.Extensions
                 return ConnectionMultiplexer.Connect(options);
             });
 
-            // we don't want this one to be a singleton like the one above
+            // we don't want these to be a singleton like the one above
             // want it scoped to the Http request, so AddScope
             services.AddScoped<IBasketRepository, BasketRepository>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
