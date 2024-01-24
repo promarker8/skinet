@@ -4,6 +4,7 @@ import { ShopService } from './shop.service';
 import { Brand } from '../shared/models/brand';
 import { Type } from '../shared/models/type';
 import { ShopParams } from '../shared/models/shopParams';
+import { BreadcrumbService } from 'xng-breadcrumb';
 
 @Component({
   selector: 'app-shop',

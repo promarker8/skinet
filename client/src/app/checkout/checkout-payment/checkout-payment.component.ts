@@ -29,6 +29,7 @@ export class CheckoutPaymentComponent {
     this.checkoutService.createOrder(orderToCreate).subscribe({
       next: order => {
         this.toastr.success('Order was created successfully');
+        // add in order service bit
         this.basketService.deleteLocalBasket();
 
         const navigationExtras: NavigationExtras = { state: order };
