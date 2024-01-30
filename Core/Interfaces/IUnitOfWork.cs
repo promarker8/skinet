@@ -9,5 +9,7 @@ namespace Core.Interfaces
         // we are keeping track of the number of changes made inside the UoW
         // then the complete method is going to save them to our database & return the number of changes
         Task<int> Complete();
+
+        Task Rollback();
     }
 }

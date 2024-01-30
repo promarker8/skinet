@@ -19,6 +19,11 @@ namespace Infrastructure.Data
             return await _context.SaveChangesAsync();
         }
 
+        public async Task Rollback()
+        {
+            await _context.DisposeAsync();
+        }
+
         public void Dispose()
         {
             _context.Dispose();

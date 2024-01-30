@@ -42,22 +42,45 @@ namespace Infrastructure.Services
             // calculate the subtotal
             var subtotal = items.Sum(item => item.Price * item.Quantity);
 
-            // create the order
-            var order = new Order(items, buyerEmail, shippingAddress, deliveryMethod, subtotal);
+            // check if we have an order with the same payment intent id (it exists already)
+            var spec = new OrderByPaymentIntentIdSpecification(basket.PaymentIntentId);
+            var order = await _unitOfWork.Repository<Order>().GetEntityWithSpec(spec);
+
+            // if we do have the order, update fields
+            if (order != null)
+            {
+                order.ShipToAddress = shippingAddress;
+                order.DeliveryMethod = deliveryMethod;
+                order.Subtotal = subtotal;
+                _unitOfWork.Repository<Order>().Update(order);
+            }
+            else
+            {
+                // create the order
+                order = new Order(items, buyerEmail, shippingAddress, deliveryMethod, subtotal, basket.PaymentIntentId);
+
+            }
 
             // save to db --> complete method actually saves them
             _unitOfWork.Repository<Order>().Add(order);
-            var result = await _unitOfWork.Complete();
+            try
+            {
+                var result = await _unitOfWork.Complete();
 
-            // if nothing has been saved to the database, then set null
-            // let the order controller deal with sending back the error response
-            if (result <= 0) return null;
+                // if nothing has been saved to the database, then set null
+                // let the order controller deal with sending back the error response
+                if (result <= 0) return null;
 
-            // delete the basket
-            await _basketRepo.DeleteBasketAsync(basketId);
+                // return order
+                return order;
 
-            // return order
-            return order;
+            }
+            catch (System.Exception ex)
+            {
+                await _unitOfWork.Rollback();
+                throw ex;
+            }
+
         }
 
         public async Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodsAsync()
