@@ -31,6 +31,8 @@ namespace API.Extensions
                 return ConnectionMultiplexer.Connect(options);
             });
 
+            services.AddSingleton<IResponseCacheService, ResponseCacheService>();
+
             // we don't want these to be a singleton like the one above
             // want it scoped to the Http request, so AddScope
             services.AddScoped<IBasketRepository, BasketRepository>();
